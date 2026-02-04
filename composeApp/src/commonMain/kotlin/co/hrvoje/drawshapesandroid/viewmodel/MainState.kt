@@ -8,4 +8,6 @@ data class MainState(
     val selectedShape: DrawShapeShape,
     val lastTap: Offset?,
     val drawnShapes: List<DrawShapeShape>,
+    val isUndoEnabled: Boolean,
+    val isRedoEnabled: Boolean,
 )

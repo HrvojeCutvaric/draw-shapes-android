@@ -5,9 +5,11 @@ import co.hrvoje.drawshapesandroid.utils.DrawShapeShape
 
 sealed interface MainAction {
 
-    data class OnShapeSelected(val shape: DrawShapeShape) : MainAction
-
     data object OnUndoClicked : MainAction
+
+    data object OnRedoClicked : MainAction
+
+    data class OnShapeSelected(val shape: DrawShapeShape) : MainAction
 
     data class OnTap(val offset: Offset) : MainAction
 }

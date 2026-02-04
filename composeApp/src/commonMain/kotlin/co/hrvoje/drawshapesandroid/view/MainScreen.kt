@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,6 +42,7 @@ import co.hrvoje.drawshapesandroid.viewmodel.MainAction
 import co.hrvoje.drawshapesandroid.viewmodel.MainState
 import co.hrvoje.drawshapesandroid.viewmodel.MainViewModel
 import drawshapesandroid.composeapp.generated.resources.Res
+import drawshapesandroid.composeapp.generated.resources.ic_redo
 import drawshapesandroid.composeapp.generated.resources.ic_undo
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -73,11 +76,30 @@ private fun MainLayout(
 
                 IconButton(
                     onClick = { onAction(MainAction.OnUndoClicked) },
+                    enabled = state.isUndoEnabled,
+                    colors = IconButtonDefaults.iconButtonColors(
+                        disabledContentColor = MaterialTheme.colorScheme.outline,
+                    )
                 ) {
                     Icon(
+                        modifier = Modifier.size(24.dp),
                         painter = painterResource(Res.drawable.ic_undo),
                         contentDescription = null,
                     )
+                }
+
+                if (state.isRedoEnabled) {
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    IconButton(
+                        onClick = { onAction(MainAction.OnRedoClicked) },
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            painter = painterResource(Res.drawable.ic_redo),
+                            contentDescription = null,
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -197,6 +219,8 @@ private fun MainScreenPreview() {
                 selectedShape = shapes.first(),
                 lastTap = null,
                 drawnShapes = emptyList(),
+                isUndoEnabled = false,
+                isRedoEnabled = false,
             ),
             onAction = {}
         )
