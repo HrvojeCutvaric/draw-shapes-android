@@ -12,4 +12,8 @@ fun typography(): Typography = Typography(
         fontSize = 24.sp,
         fontWeight = FontWeight.ExtraBold,
     ),
+    labelSmall = TextStyle(
+        fontSize = 11.sp,
+        fontWeight = FontWeight.SemiBold,
+    ),
 )
