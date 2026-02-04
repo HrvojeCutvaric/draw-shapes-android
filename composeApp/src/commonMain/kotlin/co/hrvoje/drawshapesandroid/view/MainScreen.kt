@@ -13,11 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -38,12 +35,15 @@ import co.hrvoje.drawshapesandroid.utils.Circle
 import co.hrvoje.drawshapesandroid.utils.DrawShapeShape
 import co.hrvoje.drawshapesandroid.utils.Square
 import co.hrvoje.drawshapesandroid.utils.Triangle
+import co.hrvoje.drawshapesandroid.view.components.ChipButton
 import co.hrvoje.drawshapesandroid.viewmodel.MainAction
 import co.hrvoje.drawshapesandroid.viewmodel.MainState
 import co.hrvoje.drawshapesandroid.viewmodel.MainViewModel
 import drawshapesandroid.composeapp.generated.resources.Res
 import drawshapesandroid.composeapp.generated.resources.ic_redo
 import drawshapesandroid.composeapp.generated.resources.ic_undo
+import drawshapesandroid.composeapp.generated.resources.redo
+import drawshapesandroid.composeapp.generated.resources.undo
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -67,6 +67,10 @@ private fun MainLayout(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
+            val isUndoEnabled = remember(state.undoActions) { state.undoActions.isNotEmpty() }
+            val isRedoVisible =
+                remember(state.trashUndoActions) { state.trashUndoActions.isNotEmpty() }
+
             Row(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                 horizontalArrangement = Arrangement.End,
@@ -74,32 +78,27 @@ private fun MainLayout(
             ) {
                 Spacer(modifier = Modifier.width(16.dp))
 
-                IconButton(
-                    onClick = { onAction(MainAction.OnUndoClicked) },
-                    enabled = state.isUndoEnabled,
-                    colors = IconButtonDefaults.iconButtonColors(
-                        disabledContentColor = MaterialTheme.colorScheme.outline,
-                    )
-                ) {
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(Res.drawable.ic_undo),
-                        contentDescription = null,
-                    )
-                }
+                ChipButton(
+                    isEnabled = isUndoEnabled,
+                    label = stringResource(Res.string.undo),
+                    iconRes = Res.drawable.ic_undo,
+                    borderColor = MaterialTheme.colorScheme.outline,
+                    backgroundColor = MaterialTheme.colorScheme.background,
+                    contentColor = if (isUndoEnabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline,
+                    onButtonClicked = { onAction(MainAction.OnUndoClicked) },
+                )
 
-                if (state.isRedoEnabled) {
+                if (isRedoVisible) {
                     Spacer(modifier = Modifier.width(16.dp))
 
-                    IconButton(
-                        onClick = { onAction(MainAction.OnRedoClicked) },
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            painter = painterResource(Res.drawable.ic_redo),
-                            contentDescription = null,
-                        )
-                    }
+                    ChipButton(
+                        label = stringResource(Res.string.redo),
+                        iconRes = Res.drawable.ic_redo,
+                        borderColor = MaterialTheme.colorScheme.outline,
+                        backgroundColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.onBackground,
+                        onButtonClicked = { onAction(MainAction.OnRedoClicked) }
+                    )
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -219,8 +218,8 @@ private fun MainScreenPreview() {
                 selectedShape = shapes.first(),
                 lastTap = null,
                 drawnShapes = emptyList(),
-                isUndoEnabled = false,
-                isRedoEnabled = false,
+                undoActions = emptyList(),
+                trashUndoActions = emptyList(),
             ),
             onAction = {}
         )

@@ -15,17 +15,14 @@ class MainViewModel : ViewModel() {
 
     private val shapes = listOf(Circle(), Square(), Triangle())
 
-    private val undoActions = mutableListOf<UndoAction>()
-    private val trashUndoActions = mutableListOf<UndoAction>()
-
     private val _state = MutableStateFlow(
         MainState(
             shapes = shapes,
             selectedShape = shapes.first(),
             lastTap = null,
             drawnShapes = emptyList(),
-            isUndoEnabled = false,
-            isRedoEnabled = false,
+            undoActions = emptyList(),
+            trashUndoActions = emptyList(),
         )
     )
     val state = _state.asStateFlow()
@@ -40,13 +37,17 @@ class MainViewModel : ViewModel() {
     }
 
     private fun onRedoClicked() {
+        val state = _state.value
+        val trashUndoActions = state.trashUndoActions.toMutableList()
+        val undoActions = state.undoActions.toMutableList()
+
         val last = trashUndoActions.removeLastOrNull() ?: return
 
         undoActions.add(last)
         _state.update {
             it.copy(
-                isUndoEnabled = true,
-                isRedoEnabled = trashUndoActions.isEmpty().not()
+                undoActions = undoActions,
+                trashUndoActions = trashUndoActions
             )
         }
 
@@ -62,13 +63,17 @@ class MainViewModel : ViewModel() {
     }
 
     private fun onUndoClicked() {
+        val state = _state.value
+        val trashUndoActions = state.trashUndoActions.toMutableList()
+        val undoActions = state.undoActions.toMutableList()
+
         val last = undoActions.removeLastOrNull() ?: return
 
         trashUndoActions.add(last)
         _state.update {
             it.copy(
-                isUndoEnabled = undoActions.isEmpty().not(),
-                isRedoEnabled = true,
+                undoActions = undoActions,
+                trashUndoActions = trashUndoActions
             )
         }
 
@@ -91,17 +96,19 @@ class MainViewModel : ViewModel() {
 
     private fun onTap(offset: Offset) {
         val state = _state.value
+        val trashUndoActions = state.trashUndoActions.toMutableList()
+        val undoActions = state.undoActions.toMutableList()
 
         trashUndoActions.clear()
-        _state.update {
-            it.copy(
-                isRedoEnabled = false,
-                isUndoEnabled = true
-            )
-        }
 
         if (state.lastTap == null) {
-            _state.update { it.copy(lastTap = offset) }
+            _state.update {
+                it.copy(
+                    lastTap = offset,
+                    undoActions = undoActions,
+                    trashUndoActions = trashUndoActions,
+                )
+            }
             undoActions.add(UndoAction.Tap(offset))
             return
         }
@@ -113,6 +120,8 @@ class MainViewModel : ViewModel() {
             it.copy(
                 drawnShapes = state.drawnShapes + newShape,
                 lastTap = null,
+                undoActions = undoActions,
+                trashUndoActions = trashUndoActions,
             )
         }
     }
