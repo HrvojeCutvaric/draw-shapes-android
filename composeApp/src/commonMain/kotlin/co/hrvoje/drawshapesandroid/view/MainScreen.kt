@@ -70,6 +70,7 @@ private fun MainLayout(
         TapCanvas(
             modifier = Modifier.padding(paddingValues),
             lastTap = state.lastTap,
+            drawnShapes = state.drawnShapes,
             onTap = { onAction(MainAction.OnTap(it)) }
         )
     }
@@ -79,6 +80,7 @@ private fun MainLayout(
 fun TapCanvas(
     modifier: Modifier = Modifier,
     lastTap: Offset?,
+    drawnShapes: List<DrawShapeShape>,
     onTap: (Offset) -> Unit,
 ) {
     Canvas(
@@ -88,6 +90,10 @@ fun TapCanvas(
                 detectTapGestures { offset -> onTap(offset) }
             }
     ) {
+        drawnShapes.forEach { shape ->
+            shape.run { draw() }
+        }
+
         lastTap?.let {
             drawCircle(
                 color = Primary,
@@ -164,8 +170,9 @@ private fun MainScreenPreview() {
         MainLayout(
             state = MainState(
                 shapes = shapes,
-                selectedShape = null,
+                selectedShape = shapes.first(),
                 lastTap = null,
+                drawnShapes = emptyList(),
             ),
             onAction = {}
         )

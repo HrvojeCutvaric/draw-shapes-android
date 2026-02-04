@@ -19,6 +19,7 @@ class MainViewModel : ViewModel() {
             shapes = shapes,
             selectedShape = shapes.first(),
             lastTap = null,
+            drawnShapes = emptyList(),
         )
     )
     val state = _state.asStateFlow()
@@ -31,7 +32,42 @@ class MainViewModel : ViewModel() {
     }
 
     private fun onTap(offset: Offset) {
-        _state.update { it.copy(lastTap = offset) }
+        val state = _state.value
+
+        if (state.lastTap == null) {
+            _state.update { it.copy(lastTap = offset) }
+            return
+        }
+
+        val newShape = createShape(state = state, lastTap = state.lastTap, offset = offset)
+
+        _state.update {
+            it.copy(
+                drawnShapes = state.drawnShapes + newShape,
+                lastTap = null,
+            )
+        }
+    }
+
+    private fun createShape(
+        state: MainState,
+        lastTap: Offset,
+        offset: Offset,
+    ): DrawShapeShape = when (state.selectedShape) {
+        is Circle -> Circle(
+            first = lastTap,
+            second = offset,
+        )
+
+        is Square -> Square(
+            first = lastTap,
+            second = offset,
+        )
+
+        is Triangle -> Triangle(
+            first = lastTap,
+            second = offset,
+        )
     }
 
     private fun onSelectShape(shape: DrawShapeShape) {
