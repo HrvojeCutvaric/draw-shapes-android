@@ -28,7 +28,21 @@ class MainViewModel : ViewModel() {
         when (action) {
             is MainAction.OnShapeSelected -> onSelectShape(action.shape)
             is MainAction.OnTap -> onTap(action.offset)
+            MainAction.OnUndoClicked -> onUndoClicked()
         }
+    }
+
+    private fun onUndoClicked() {
+        val state = _state.value
+
+        if (state.lastTap != null) {
+            _state.update { it.copy(lastTap = null) }
+            return
+        }
+
+        if (state.drawnShapes.isEmpty()) return
+
+        _state.update { it.copy(drawnShapes = state.drawnShapes.dropLast(1)) }
     }
 
     private fun onTap(offset: Offset) {

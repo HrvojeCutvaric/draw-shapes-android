@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,6 +39,8 @@ import co.hrvoje.drawshapesandroid.utils.Triangle
 import co.hrvoje.drawshapesandroid.viewmodel.MainAction
 import co.hrvoje.drawshapesandroid.viewmodel.MainState
 import co.hrvoje.drawshapesandroid.viewmodel.MainViewModel
+import drawshapesandroid.composeapp.generated.resources.Res
+import drawshapesandroid.composeapp.generated.resources.ic_undo
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -59,6 +63,26 @@ private fun MainLayout(
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        topBar = {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Spacer(modifier = Modifier.width(16.dp))
+
+                IconButton(
+                    onClick = { onAction(MainAction.OnUndoClicked) },
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_undo),
+                        contentDescription = null,
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+            }
+        },
         bottomBar = {
             BottomBar(
                 shapes = state.shapes,
@@ -68,7 +92,7 @@ private fun MainLayout(
         }
     ) { paddingValues ->
         TapCanvas(
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier.padding(paddingValues.calculateBottomPadding()),
             lastTap = state.lastTap,
             drawnShapes = state.drawnShapes,
             onTap = { onAction(MainAction.OnTap(it)) }
