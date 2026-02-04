@@ -19,47 +19,58 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import co.hrvoje.drawshapesandroid.ui.DrawShapeTheme
 import co.hrvoje.drawshapesandroid.ui.Primary
 import co.hrvoje.drawshapesandroid.utils.Circle
 import co.hrvoje.drawshapesandroid.utils.DrawShapeShape
 import co.hrvoje.drawshapesandroid.utils.Square
 import co.hrvoje.drawshapesandroid.utils.Triangle
+import co.hrvoje.drawshapesandroid.viewmodel.MainAction
+import co.hrvoje.drawshapesandroid.viewmodel.MainState
+import co.hrvoje.drawshapesandroid.viewmodel.MainViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    viewModel: MainViewModel = viewModel()
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
+    MainLayout(
+        state = state,
+        onAction = viewModel::execute,
+    )
 }
 
 @Composable
 private fun MainLayout(
-    shapes: List<DrawShapeShape>,
-    currentShape: DrawShapeShape?,
-    onShapeSelected: (DrawShapeShape) -> Unit,
+    state: MainState,
+    onAction: (MainAction) -> Unit,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             BottomBar(
-                shapes = shapes,
-                currentShape = currentShape,
-                onShapeSelected = onShapeSelected
+                shapes = state.shapes,
+                currentShape = state.selectedShape,
+                onShapeSelected = { onAction(MainAction.OnShapeSelected(it)) }
             )
         }
     ) { paddingValues ->
         TapCanvas(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
+            lastTap = state.lastTap,
+            onTap = { onAction(MainAction.OnTap(it)) }
         )
     }
 }
@@ -67,14 +78,14 @@ private fun MainLayout(
 @Composable
 fun TapCanvas(
     modifier: Modifier = Modifier,
+    lastTap: Offset?,
+    onTap: (Offset) -> Unit,
 ) {
-    var lastTap by remember { mutableStateOf<Offset?>(null) }
-
     Canvas(
         modifier = modifier
             .fillMaxSize()
             .pointerInput(Unit) {
-                detectTapGestures { offset -> lastTap = offset }
+                detectTapGestures { offset -> onTap(offset) }
             }
     ) {
         lastTap?.let {
@@ -151,11 +162,12 @@ private fun MainScreenPreview() {
 
     DrawShapeTheme {
         MainLayout(
-            shapes = listOf(
-                Circle(), Square(), Triangle()
+            state = MainState(
+                shapes = shapes,
+                selectedShape = null,
+                lastTap = null,
             ),
-            currentShape = shapes[0],
-            onShapeSelected = {},
+            onAction = {}
         )
     }
 }
