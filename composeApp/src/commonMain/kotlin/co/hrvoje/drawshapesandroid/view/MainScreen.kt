@@ -92,7 +92,7 @@ private fun MainLayout(
         }
     ) { paddingValues ->
         TapCanvas(
-            modifier = Modifier.padding(paddingValues.calculateBottomPadding()),
+            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
             lastTap = state.lastTap,
             drawnShapes = state.drawnShapes,
             onTap = { onAction(MainAction.OnTap(it)) }
