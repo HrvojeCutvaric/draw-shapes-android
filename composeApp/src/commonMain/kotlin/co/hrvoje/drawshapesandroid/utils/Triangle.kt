@@ -14,13 +14,13 @@ import org.jetbrains.compose.resources.StringResource
 class Triangle(
     override val name: StringResource = Res.string.triangle,
     override val icon: DrawableResource = Res.drawable.ic_triangle,
-    override var first: Offset? = null,
-    override var second: Offset? = null,
+    override var centerPoint: Offset? = null,
+    override var referencePoint: Offset? = null,
 ) : DrawShapeShape {
 
     override fun DrawScope.draw() {
-        val centerPoint = first ?: return
-        val vertexPoint = second ?: return
+        val centerPoint = centerPoint ?: return
+        val vertexPoint = referencePoint ?: return
 
         val centerToVertexVector = vertexPoint - centerPoint
 
@@ -37,4 +37,12 @@ class Triangle(
 
         drawPath(trianglePath, color = Primary, style = Stroke(width = 6f))
     }
+
+    override fun createWithPoints(
+        centerPoint: Offset,
+        referencePoint: Offset,
+    ): DrawShapeShape = Triangle(
+        centerPoint = centerPoint,
+        referencePoint = referencePoint,
+    )
 }

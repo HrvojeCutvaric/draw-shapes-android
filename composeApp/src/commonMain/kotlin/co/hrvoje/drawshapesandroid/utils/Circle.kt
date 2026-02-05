@@ -13,19 +13,27 @@ import org.jetbrains.compose.resources.StringResource
 class Circle(
     override val name: StringResource = Res.string.circle,
     override val icon: DrawableResource = Res.drawable.ic_circle,
-    override var first: Offset? = null,
-    override var second: Offset? = null,
+    override var centerPoint: Offset? = null,
+    override var referencePoint: Offset? = null,
 ) : DrawShapeShape {
 
     override fun DrawScope.draw() {
-        val first = first ?: return
-        val second = second ?: return
-        val radius = first.distanceTo(second)
+        val center = centerPoint ?: return
+        val circumferencePoint = referencePoint ?: return
+        val radius = center.distanceTo(circumferencePoint)
         drawCircle(
             color = Primary,
             radius = radius,
-            center = first,
+            center = center,
             style = Stroke(width = 6f)
         )
     }
+
+    override fun createWithPoints(
+        centerPoint: Offset,
+        referencePoint: Offset,
+    ): DrawShapeShape = Circle(
+        centerPoint = centerPoint,
+        referencePoint = referencePoint,
+    )
 }

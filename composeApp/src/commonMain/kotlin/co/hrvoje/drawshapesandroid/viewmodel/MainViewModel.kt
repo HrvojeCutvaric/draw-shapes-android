@@ -94,7 +94,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private fun onTap(offset: Offset) {
+    private fun onTap(tapPosition: Offset) {
         val state = _state.value
         val trashUndoActions = state.trashUndoActions.toMutableList()
         val undoActions = state.undoActions.toMutableList()
@@ -104,16 +104,19 @@ class MainViewModel : ViewModel() {
         if (state.lastTap == null) {
             _state.update {
                 it.copy(
-                    lastTap = offset,
+                    lastTap = tapPosition,
                     undoActions = undoActions,
                     trashUndoActions = trashUndoActions,
                 )
             }
-            undoActions.add(UndoAction.Tap(offset))
+            undoActions.add(UndoAction.Tap(tapPosition))
             return
         }
 
-        val newShape = createShape(state = state, lastTap = state.lastTap, offset = offset)
+        val newShape = state.selectedShape.createWithPoints(
+            centerPoint = state.lastTap,
+            referencePoint = tapPosition,
+        )
         undoActions.add(UndoAction.Shape(newShape))
 
         _state.update {
@@ -124,27 +127,6 @@ class MainViewModel : ViewModel() {
                 trashUndoActions = trashUndoActions,
             )
         }
-    }
-
-    private fun createShape(
-        state: MainState,
-        lastTap: Offset,
-        offset: Offset,
-    ): DrawShapeShape = when (state.selectedShape) {
-        is Circle -> Circle(
-            first = lastTap,
-            second = offset,
-        )
-
-        is Square -> Square(
-            first = lastTap,
-            second = offset,
-        )
-
-        is Triangle -> Triangle(
-            first = lastTap,
-            second = offset,
-        )
     }
 
     private fun onSelectShape(shape: DrawShapeShape) {

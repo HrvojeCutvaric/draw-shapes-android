@@ -14,13 +14,13 @@ import org.jetbrains.compose.resources.StringResource
 class Square(
     override val name: StringResource = Res.string.square,
     override val icon: DrawableResource = Res.drawable.ic_square,
-    override var first: Offset? = null,
-    override var second: Offset? = null,
+    override var centerPoint: Offset? = null,
+    override var referencePoint: Offset? = null,
 ) : DrawShapeShape {
 
     override fun DrawScope.draw() {
-        val centerPoint = first ?: return
-        val cornerPoint = second ?: return
+        val centerPoint = centerPoint ?: return
+        val cornerPoint = referencePoint ?: return
 
         val centerToCornerVector = cornerPoint - centerPoint
         val perpendicularVector = Offset(-centerToCornerVector.y, centerToCornerVector.x)
@@ -40,4 +40,12 @@ class Square(
 
         drawPath(squarePath, color = Primary, style = Stroke(width = 6f))
     }
+
+    override fun createWithPoints(
+        centerPoint: Offset,
+        referencePoint: Offset,
+    ): DrawShapeShape = Square(
+        centerPoint = centerPoint,
+        referencePoint = referencePoint,
+    )
 }

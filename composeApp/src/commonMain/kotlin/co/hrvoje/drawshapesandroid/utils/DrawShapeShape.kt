@@ -11,9 +11,14 @@ sealed interface DrawShapeShape {
 
     val icon: DrawableResource
 
-    var first: Offset?
+    var centerPoint: Offset?
 
-    var second: Offset?
+    var referencePoint: Offset?
 
     fun DrawScope.draw()
+
+    fun createWithPoints(
+        centerPoint: Offset,
+        referencePoint: Offset,
+    ): DrawShapeShape
 }
