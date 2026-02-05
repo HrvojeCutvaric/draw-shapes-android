@@ -8,8 +8,16 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun typography(): Typography = Typography(
-    titleLarge = TextStyle(
-        fontSize = 24.sp,
-        fontWeight = FontWeight.ExtraBold,
+    labelSmall = TextStyle(
+        fontSize = 11.sp,
+        fontWeight = FontWeight.SemiBold,
+    ),
+    bodySmall = TextStyle(
+        fontSize = 15.sp,
+        fontWeight = FontWeight.Normal,
+    ),
+    headlineMedium = TextStyle(
+        fontSize = 17.sp,
+        fontWeight = FontWeight.Bold
     ),
 )
