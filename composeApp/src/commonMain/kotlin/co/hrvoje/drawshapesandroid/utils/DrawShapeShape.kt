@@ -11,6 +11,8 @@ sealed interface DrawShapeShape {
 
     val icon: DrawableResource
 
+    val info: StringResource
+
     var centerPoint: Offset?
 
     var referencePoint: Offset?

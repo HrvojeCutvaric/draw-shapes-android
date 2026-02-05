@@ -8,12 +8,14 @@ import co.hrvoje.drawshapesandroid.ui.Primary
 import drawshapesandroid.composeapp.generated.resources.Res
 import drawshapesandroid.composeapp.generated.resources.ic_square
 import drawshapesandroid.composeapp.generated.resources.square
+import drawshapesandroid.composeapp.generated.resources.tap_to_set_corner_square
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
 class Square(
     override val name: StringResource = Res.string.square,
     override val icon: DrawableResource = Res.drawable.ic_square,
+    override val info: StringResource = Res.string.tap_to_set_corner_square,
     override var centerPoint: Offset? = null,
     override var referencePoint: Offset? = null,
 ) : DrawShapeShape {

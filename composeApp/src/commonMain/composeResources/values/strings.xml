@@ -4,4 +4,9 @@
     <string name="triangle">Circle</string>
     <string name="undo">Undo</string>
     <string name="redo">Redo</string>
+    <string name="selected_shape">Selected shape: %1$s</string>
+    <string name="tap_to_set_center_point">Set the center point</string>
+    <string name="tap_to_set_radius">Tap a radius</string>
+    <string name="tap_to_set_corner_square">Tap a corner point</string>
+    <string name="tap_to_set_vertex">Tap a vertex point</string>
 </resources>

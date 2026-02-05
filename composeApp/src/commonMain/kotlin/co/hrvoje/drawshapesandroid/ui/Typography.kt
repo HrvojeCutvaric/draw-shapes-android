@@ -16,4 +16,8 @@ fun typography(): Typography = Typography(
         fontSize = 15.sp,
         fontWeight = FontWeight.Normal,
     ),
+    headlineMedium = TextStyle(
+        fontSize = 17.sp,
+        fontWeight = FontWeight.Bold
+    ),
 )

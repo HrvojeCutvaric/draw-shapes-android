@@ -41,6 +41,8 @@ private fun MainLayout(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             UndoRedoTapBar(
+                selectedShape = state.selectedShape,
+                lastTap = state.lastTap,
                 undoActions = state.undoActions,
                 trashUndoActions = state.trashUndoActions,
                 onUndoClicked = { onAction(MainAction.OnUndoClicked) },
@@ -56,7 +58,7 @@ private fun MainLayout(
         }
     ) { paddingValues ->
         TapCanvas(
-            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
+            modifier = Modifier.padding(paddingValues),
             lastTap = state.lastTap,
             drawnShapes = state.drawnShapes,
             onTap = { onAction(MainAction.OnTap(it)) }

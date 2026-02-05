@@ -7,12 +7,14 @@ import co.hrvoje.drawshapesandroid.ui.Primary
 import drawshapesandroid.composeapp.generated.resources.Res
 import drawshapesandroid.composeapp.generated.resources.circle
 import drawshapesandroid.composeapp.generated.resources.ic_circle
+import drawshapesandroid.composeapp.generated.resources.tap_to_set_radius
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
 class Circle(
     override val name: StringResource = Res.string.circle,
     override val icon: DrawableResource = Res.drawable.ic_circle,
+    override val info: StringResource = Res.string.tap_to_set_radius,
     override var centerPoint: Offset? = null,
     override var referencePoint: Offset? = null,
 ) : DrawShapeShape {

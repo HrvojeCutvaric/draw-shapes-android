@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import co.hrvoje.drawshapesandroid.ui.Primary
 import drawshapesandroid.composeapp.generated.resources.Res
 import drawshapesandroid.composeapp.generated.resources.ic_triangle
+import drawshapesandroid.composeapp.generated.resources.tap_to_set_vertex
 import drawshapesandroid.composeapp.generated.resources.triangle
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -14,6 +15,7 @@ import org.jetbrains.compose.resources.StringResource
 class Triangle(
     override val name: StringResource = Res.string.triangle,
     override val icon: DrawableResource = Res.drawable.ic_triangle,
+    override val info: StringResource = Res.string.tap_to_set_vertex,
     override var centerPoint: Offset? = null,
     override var referencePoint: Offset? = null,
 ) : DrawShapeShape {
