@@ -38,4 +38,6 @@ class Circle(
         centerPoint = centerPoint,
         referencePoint = referencePoint,
     )
+
+    private fun Offset.distanceTo(other: Offset): Float = (this - other).getDistance()
 }
