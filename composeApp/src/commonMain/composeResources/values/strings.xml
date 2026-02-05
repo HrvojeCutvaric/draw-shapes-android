@@ -1,7 +1,7 @@
 <resources>
     <string name="circle">Circle</string>
     <string name="square">Square</string>
-    <string name="triangle">Circle</string>
+    <string name="triangle">Triangle</string>
     <string name="undo">Undo</string>
     <string name="redo">Redo</string>
     <string name="selected_shape">Selected shape: %1$s</string>
