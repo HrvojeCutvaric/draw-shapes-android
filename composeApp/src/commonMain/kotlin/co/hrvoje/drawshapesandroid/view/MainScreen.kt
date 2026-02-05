@@ -22,7 +22,7 @@ import co.hrvoje.drawshapesandroid.viewmodel.MainViewModel
 
 @Composable
 fun MainScreen(
-    viewModel: MainViewModel = viewModel()
+    viewModel: MainViewModel = viewModel { MainViewModel() },
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
